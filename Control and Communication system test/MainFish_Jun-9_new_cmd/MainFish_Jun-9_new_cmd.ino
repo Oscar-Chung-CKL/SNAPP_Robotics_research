@@ -15,7 +15,6 @@
  * 
  * 
  */
-yo
 #define debug 0
 //Servo
 Servo servo1;
