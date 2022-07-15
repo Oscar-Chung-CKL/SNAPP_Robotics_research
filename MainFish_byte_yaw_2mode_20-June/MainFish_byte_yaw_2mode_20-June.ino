@@ -104,54 +104,34 @@ int userCommand = 0;
 
 
 
-char getData(){                  //data update from controller
-//updates the speed, pitch, roll and yaw command 
-//cmd signal would be : c speed(1) pitch(1) roll(1) yaw (1) e 
+char getData(){                  // data update from controller
+// updates the speed, pitch, roll and yaw command 
+// cmd signal would be : c speed(1) pitch(1) roll(1) yaw (1) e 
 // the buffer would be of length 6.
-    //Serial.println("getting");
-    if(Serial1.available()>=6){
+    if(Serial1.available()>=6)
+    {
       int x = Serial1.read();
-      if (x == 'h'){
-        char text[4];
-        text [0] = x;
-        for (int i = 1; i < 4; i++){
-          text[i] = Serial1.read();
-          
-        }
-        ///////////////////////////////////// home set here//////////////////////////////////////
-        if (text[0] == 'h' && text[1] == 'o' && text[2] == 'm' && text[3] == 'e'){ 
-          Serial.println("home got");
-          // write 0
+      if (x == 'h')
+        {
           fish_enc.write(0);
-          //Serial.print( "Current Position is : ");
-          //Serial.print(fish_enc.read());
         }
         ///////////////////////////////////////home set END//////////////////////////////////////
-      }
-      if(x == 'c'){
-        for (int i = 0; i < 6; i++){
+      elif(x == 'c')
+      {
+        for (int i = 0; i < 6; i++)
+        {
           inComingbyte[i] = Serial1.read();
         }
-          //Cycles through the entire buffer and rocesses the information  
-
+        
+        //Cycle through the entire buffer and rocesses the information  
+        speedVal  = inComingbyte[0] -'0';
+        pitchVal    = inComingbyte[1] ;
+        yawVal      = inComingbyte[2] - '0';
+        rollVal     = inComingbyte[3] ;
          
-         speedVal  = inComingbyte[0] -'0';
-         pitchVal    = inComingbyte[1] ;
-         yawVal      = inComingbyte[2] - '0';
-         rollVal     = inComingbyte[3] ;
-         
-         for (int i = 0; i < 6; i++){
-          //Serial.print(inComingbyte[i]);
-        }
-        //Serial.println();
-         
-         killTimer = millis();  
-         
-         
+        killTimer = millis();  
       }
- 
     }
-
 }
 
 //////////////////////////////////////////////////////////// Yaw turn functions ///////////////////////////////////////////////////
