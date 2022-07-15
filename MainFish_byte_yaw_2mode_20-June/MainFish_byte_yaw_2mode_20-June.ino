@@ -104,34 +104,39 @@ int userCommand = 0;
 
 
 
-char getData(){                  // data update from controller
+char getData()
+{                  // data update from controller
 // updates the speed, pitch, roll and yaw command 
 // cmd signal would be : c speed(1) pitch(1) roll(1) yaw (1) e 
 // the buffer would be of length 6.
-    if(Serial1.available()>=6)
+  if(Serial1.available()>=6)
+  {
+    int x = Serial1.read();
+    ///////////////////////////////////////home set BEGIN////////////////////////////////////
+    
+    if (x == 'h')
     {
-      int x = Serial1.read();
-      if (x == 'h')
-        {
-          fish_enc.write(0);
-        }
-        ///////////////////////////////////////home set END//////////////////////////////////////
-      elif(x == 'c')
-      {
-        for (int i = 0; i < 6; i++)
-        {
-          inComingbyte[i] = Serial1.read();
-        }
-        
-        //Cycle through the entire buffer and rocesses the information  
-        speedVal  = inComingbyte[0] -'0';
-        pitchVal    = inComingbyte[1] ;
-        yawVal      = inComingbyte[2] - '0';
-        rollVal     = inComingbyte[3] ;
-         
-        killTimer = millis();  
-      }
+      fish_enc.write(0);
     }
+    
+    ///////////////////////////////////////home set END//////////////////////////////////////
+    
+    elif(x == 'c')
+    {
+      for (int i = 0; i < 6; i++)
+      {
+        inComingbyte[i] = Serial1.read();
+      }
+        
+      //Cycle through the entire buffer and rocesses the information  
+      speedVal  = inComingbyte[0] -'0';
+      pitchVal    = inComingbyte[1] ;
+      yawVal      = inComingbyte[2] - '0';
+      rollVal     = inComingbyte[3] ;
+         
+      killTimer = millis();  
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////// Yaw turn functions ///////////////////////////////////////////////////
