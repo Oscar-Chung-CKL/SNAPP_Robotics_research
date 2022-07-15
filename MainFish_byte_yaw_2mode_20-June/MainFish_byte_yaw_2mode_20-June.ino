@@ -40,49 +40,21 @@ int yawVal = -1;
 
 //Communication
 
-float s1, s2;
+float s1, s2; // s1: degree of servo 1      s2: degree of servo 2
 bool check;
 int inComingbyte[6] = {0};
-String w;
-String char1, char2, char3, char4;
-int val1 = 0, val2 = 0, val3 = 0, val4 = 0;
+
 int power = 0;          //Stores power value from controller
 
 //Motor
 
 float motor_Pwm = 0;
-bool red_Flag = LOW;
-bool on = LOW;
-
-//encoder
-unsigned long int timer1 = 0;
-unsigned long int timer2 = 0;
-long int counter = 0;
-long int runtime = 0;
-long int timer = 0;
-float timeStep = 0;
-long int encoderCounter = 0;
-long int encoderRawVal = 0; //Global Variable for encoder absolute value
-double angularVelocity[3] = {0, 0, 0};
-long int counter2 = 0;
-volatile long unsigned int speed_Counter = 0;
-bool flag_Motion = false; // this flag checks if the motor is in motion, returns false if it is stalled. 
 
 
-float frequency = 0;
-long int t_initial = 0;
 
 //Turn Differential
 int turnVal = 5;        //Stores commmand value for control left and right. values 1-4 are left, 5 is straight, 6-9 are right
-int oldTurnVal = 5;
-int encoderVal = 0;         //stores value of encoder at any given time. Updates from interrupt.
-float turn_Pwm = 0;         // Pwm value with differential applied
-int oldPower = 5;
-long int tailDelay1 = 2000;
-int encoderPin0   =  29;
-double diff = 0.5;              //to store the differential value corresponding to the signal
-double stepDiff = 0.1;          //sets the differential value
-int highcutoff, lowcutoff, offset;
+
 
 //Kill Switch
 long int killTimer; //timer for kill switch
@@ -106,9 +78,7 @@ Servo   pusherESC;
 #define ENCB 4 // WHITE
 volatile long int pos_Main = 0;
 const long int ticRatioMainMotor=6255; //Number of tic per revolution of the main motor. Implemnted to use the relative encoder as an absolute encoder temporarily. 
-long int rotationCounter = 0;
-long int prev_Ticks = 0;
-long int delta_t = 0;
+
 
 //////////////////////////////////////////// Yaw turn variables /////////////////////////////////////////////////////////
 
@@ -130,7 +100,7 @@ int userCommand = 0;
 
 /////////////////////////////////////////// End of Yaw Turn variables //////////////////////////////////////////////////
 
-float rel_angle = 0;
+
 
 char getData(){                  //data update from controller
 //updates the speed, pitch, roll and yaw command 
@@ -255,8 +225,8 @@ int yaw_turn(int pwm, float diff, int turn){
 
 
 void setup() {
-  pinMode(13, OUTPUT);
-  digitalWrite(13, LOW); // Off to indicate still in setup
+//   pinMode(13, OUTPUT);
+//   digitalWrite(13, LOW); // Off to indicate still in setup
 
   // When the fish is connected without shield, there is one more 5V pin require
   // The code below is to use digital pin to output %v as temp use
@@ -297,7 +267,6 @@ void setup() {
     pusherESC.attach(PIN_PUSHERESC);
     pusherESC.writeMicroseconds(THROTTLE_MIN);
 
-    t_initial = 0; //initiallize speed encoder;
 
   Serial.println("Arming........After delay");  
   
@@ -320,7 +289,6 @@ void setup() {
 
 }
 
-char cmd[12];    //to store the signal from transmitter
 
 void loop() {
 
@@ -366,57 +334,10 @@ void loop() {
       }
 
 
-  #if debug
-  //For debugging purposes, we can print everything on the Serial to test, just change debug to 1. 
-
-    Serial.print("Encoder Items: ");
-    Serial.print("\t");
-    Serial.print(rotationCounter);
-    Serial.print("\t");
-    Serial.print(frequency); 
-    Serial.print("\t");
-    Serial.print(rel_angle);
-    Serial.println();
-
-    // Communication Items
-
-    // Actuation Signals 
-  #endif
-
   //Serial.println((String)"power: " + power + "turning: " + turnVal);
   
   Serial.flush();
   Serial1.flush();
-}
-
-void rel_Encoder(){
-
-  long int x = pos_Main; //variable for current ticks
-  if(prev_Ticks <= x );
-  
-  else{
-    
-    if(x < ticRatioMainMotor){
-      rel_angle = (x/(ticRatioMainMotor*1.0))*360; //this is angle in degrees
-    }
-    else if ( x >= ticRatioMainMotor){
-      // this command happense whenever we pass a turn
-      
-      pos_Main = x - ticRatioMainMotor; //reset the number of ticks
-      prev_Ticks = x - ticRatioMainMotor; // the comparison for motion depends on the tick counter, which we reset after a full loop. Otherwise we can have tick count as two parts, like hour and minutes thing. 
-      rotationCounter++; //keep track of the number of rotation
-    }
-    
-    // Speed determination 
-    if(speed_Counter > 10){
-      int temp = millis(); //placeholder for the current time, so that all calculations reference this time
-      delta_t = temp - t_initial;
-    if (delta_t > 0) frequency = speed_Counter/(delta_t);
-    t_initial = temp;
-    prev_Ticks = x;
-    speed_Counter = 0; 
-    }   
-  }
 }
 
 
@@ -428,17 +349,3 @@ void killswitch(){
   }
 }
 
-//function for check sum
-bool checkSum(char incomingByte, int siglen, char cmd[]) {
-  check = false;
-  int cSum=0;
-  for (int c=0; c<8; c++){
-    cSum+=cmd[c];
-  }
-  String numcheck = String(cmd[8]) + String(cmd[9]) + String(cmd[10]);
-  int number = numcheck.toInt();
-  if (cSum == number) {
-    check = true;
-  }
-  return check;
-}
