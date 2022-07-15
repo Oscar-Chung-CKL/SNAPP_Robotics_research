@@ -6,4 +6,4 @@ This is a development code that drives SNAPP, our Robotic Fish!
 
 ## Code Breakdown
 
-### 
+### The Variables
