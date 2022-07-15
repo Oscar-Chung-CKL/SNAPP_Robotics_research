@@ -104,8 +104,8 @@ int userCommand = 0;
 
 
 
-char getData()
-{                  // data update from controller
+void getData()     // data update from controller
+{                  
 // updates the speed, pitch, roll and yaw command 
 // cmd signal would be : c speed(1) pitch(1) roll(1) yaw (1) e 
 // the buffer would be of length 6.
