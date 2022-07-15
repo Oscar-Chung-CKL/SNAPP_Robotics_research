@@ -112,16 +112,13 @@ char getData()
   if(Serial1.available()>=6)
   {
     int x = Serial1.read();
-    ///////////////////////////////////////home set BEGIN////////////////////////////////////
-    
-    if (x == 'h')
+
+    if (x == 'h')   // Home command
     {
-      fish_enc.write(0);
+      fish_enc.write(0);   // Reset the encoder to 0
     }
     
-    ///////////////////////////////////////home set END//////////////////////////////////////
-    
-    elif(x == 'c')
+    elif(x == 'c')    // Elif, just in case some wild signal pops in
     {
       for (int i = 0; i < 6; i++)
       {
