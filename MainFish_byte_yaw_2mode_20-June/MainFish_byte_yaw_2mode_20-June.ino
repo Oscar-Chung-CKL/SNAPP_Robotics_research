@@ -3,7 +3,8 @@
 #include <Encoder.h>
 
 /*
- * Fixing up Saad's code. There are many things I would like to change, as I like my previous code more, but that will just be a lot of work. I need it to get it functional. 
+ * Fixing up Saad's code. There are many things I would like to change, as I like my previous code more, but that will just be a lot of work. 
+    I need it to get it functional. 
  * will figure out how to make it tidy by using my own header files and function. 
  * 
  * Core things to have is a reliable communication system, will need to remove all the redundant signals. 
@@ -77,7 +78,8 @@ Servo   pusherESC;
 #define ENCA 21 // YELLOW
 #define ENCB 4 // WHITE
 volatile long int pos_Main = 0;
-const long int ticRatioMainMotor=6255; //Number of tic per revolution of the main motor. Implemnted to use the relative encoder as an absolute encoder temporarily. 
+const long int ticRatioMainMotor=6255; //Number of tic per revolution of the main motor. 
+                                       //Implemnted to use the relative encoder as an absolute encoder temporarily. 
 
 
 //////////////////////////////////////////// Yaw turn variables /////////////////////////////////////////////////////////
@@ -241,7 +243,8 @@ void setup() {
   //Initialize //Serial
   Serial.begin(115200,SERIAL_8O1);
   Serial1.begin(19200,SERIAL_8O1);
-  //while (!(Serial.available() || Serial1.available()));     //Ensure fish does not start until there is a signal from comp or controller
+  //while (!(Serial.available() || Serial1.available()));     
+    //Ensure fish does not start until there is a signal from comp or controller
   
 
 
