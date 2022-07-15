@@ -21,10 +21,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // Timers
 long int timer1 = 0;       //store the time when transmiting
-long int timer2 = 0;       //store the time when sending T signals
-long int timer3 = 0;       //store the time when pressing left-right buttons
-long int timer4 = 0;       //store the time when pressing up-down buttons
-long int timer5 = 0;       //store the time when sending P signals
+
 long int bounceDelay = 90;  // delay to avoid bounce on switch, or you call the "ping"
 
 // The byte array to store the message to be sent
@@ -35,7 +32,7 @@ byte msg[6];
 //signal1:R;     signal2:U;     signal3:T;      signal4:P
 String sum_str;
 char message[6];
-int ascii_sum;     //checkSum value
+
 
 //declare Funduino buttons
 int leftbutton = 5;           
@@ -163,7 +160,7 @@ void setup() {
 //  Serial1.begin(19200,SERIAL_8O1);
 //  Serial2.begin(19200,SERIAL_8O1);
 //  Serial3.begin(19200,SERIAL_8O1);
-//  
+//  only enable when mega is used
   
   
 
@@ -218,6 +215,7 @@ void setup() {
   pinMode(rightbutton,INPUT_PULLUP);
   pinMode(upbutton,INPUT_PULLUP);
   pinMode(downbutton,INPUT_PULLUP);
+  pinMode(keybutton,INPUT_PULLUP);
 
 }
 
@@ -243,9 +241,11 @@ void loop() {
   
   
 
-  if (currentLeft == LOW && currentRight == LOW ){
+  if (currentLeft == LOW && currentRight == LOW ){ //home the encoder
       Serial.write("home");
       Serial.flush();
+     
+     //enable only when mega is used
       //timer1 = millis();
 //      Serial1.write("home");
 //      Serial1.flush();
@@ -272,7 +272,7 @@ void loop() {
   checkButton(LEFT);
   checkButton(RIGHT);
 
-  if (currentUp == LOW && currentDown == LOW ){
+  if (currentUp == LOW && currentDown == LOW ){ //go full speed
 
       if (millis() - timer1 > 50) {
       timer1 = millis(); //update timer1
@@ -365,7 +365,8 @@ void loop() {
     //display.display();
     
     
-    // Send signal after every 30 ms
+    // Send signal after every 50 ms
+   // send command
     if (millis() - timer1 > 50) {
       timer1 = millis(); //update timer1
   
@@ -395,6 +396,7 @@ void loop() {
         Serial.write(msg[i]);
         Serial.flush();
   
+         //enable if using mega
         
 //        Serial1.write(msg[i]);
 //        Serial1.flush();
@@ -421,6 +423,8 @@ void loop() {
     Serial3.flush();
     */
 
+   
+   //This is the get sensor function, not tested yet
 //    getSensor();
 //    display.print("Water Level: ");
 //    display.println(waterLevel);
@@ -432,6 +436,7 @@ void loop() {
 }
 
 void getSensor (){
+   // get sensor function
   if (Serial.available() > 0){
     int last_water = waterLevel;
     int last_temp = tempature;
