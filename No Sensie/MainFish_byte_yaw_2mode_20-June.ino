@@ -138,7 +138,7 @@ void getData()     // data update from controller
 
 //////////////////////////////////////////////////////////// Yaw turn functions ///////////////////////////////////////////////////
 
-float encoder_position()
+float encoderPosition()
 {
   // takes the current count and updates it to an angle from 0 degrees - 360 degress
   long new_fin = fish_enc.read();
@@ -150,16 +150,6 @@ float encoder_position()
   }
   return x*1.0/count_per_revolution*360;
 
-}
-
-
-int pid_controller(float angle, float desired_angle, int k_p)
-{
-  //takes the angle and calculates the corrected signal. Returns the value in microseconds. 
-  float error = desired_angle-angle;
-  float x = (k_p*error)/3+1500;
-  if (x > 1800) x = 1800;
-  if (x < 1200) x = 1200;
 }
 
 int yaw_turn(int pwm, float diff, int turn){
@@ -272,7 +262,7 @@ void setup() {
 void loop() {
 
   getData();
-  enc_pos = encoder_position();
+  enc_pos = encoderPosition();
 
   Serial.println(enc_pos);
  
