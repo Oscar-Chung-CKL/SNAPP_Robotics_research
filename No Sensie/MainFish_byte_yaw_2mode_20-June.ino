@@ -127,9 +127,9 @@ void getData()     // data update from controller
         
       //Cycle through the entire buffer and rocesses the information  
       speedVal  = inComingbyte[0] -'0';
-      pitchVal    = inComingbyte[1] ;
-      yawVal      = inComingbyte[2] - '0';
-      rollVal     = inComingbyte[3] ;
+      pitchVal  = inComingbyte[1] ;
+      yawVal    = inComingbyte[2] - '0';
+      rollVal   = inComingbyte[3] ;
          
       killTimer = millis();  
     }
