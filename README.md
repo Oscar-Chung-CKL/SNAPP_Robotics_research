@@ -70,12 +70,11 @@ getData{
 
 ### <br><br> **The encoder_position() Function**
 ---
-
-<br>As the title suggests, this function returns a floating point value corresponding to the encoder position from 0-360 degrees, **very precisely**.
+As the title suggests, this function returns a floating point value corresponding to the encoder position from 0-360 degrees, **very precisely**.
 
 Before reading this section, please note that the encoder values we read here are measured in "ticks", where a "tick" is the single smallest rotation that we can detect. For example, a clock has a total of 60 seconds, or "ticks", where a second represents a single "tick". In the case of the encoder, the number of ticks is determined by the manufacturer, but usually, it's in the order of 6000+ ticks! (if that number doesn't impress you, try doing some math and figure out how many degrees represents a single tick on these encoders vs a clock hand)
 
-<br>First, we read the encoder value into a long variable **new_fin**, and then gets the remainder of the division of **new_fin** by the **count_per_revolution** global variable.
+First, we read the encoder value into a long variable **new_fin**, and then gets the remainder of the division of **new_fin** by the **count_per_revolution** global variable.
 
 ```c
   long new_fin = fish_enc.read();
