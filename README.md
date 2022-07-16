@@ -71,3 +71,30 @@ getData{
 ```
 
 <br> And that wraps up the getData() function!
+
+
+### <br><br> **The encoder_position() Function**
+
+<br>As the title suggests, this function returns a floating point value corresponding to the encoder position from 0-360 degrees, **very precisely**.
+
+Before reading this section, please note that the encoder values we read here are measured in "ticks", where a "tick" is the single smallest rotation that we can detect. For example, a clock has a total of 60 seconds, or "ticks", where a second represents a single "tick". In the case of the encoder, the number of ticks is determined by the manufacturer, but usually, it's in the order of 6000+ ticks! (if that number doesn't impress you, try doing some math and figure out how many degrees represents a single tick on these encoders vs a clock hand)
+
+<br>First, we read the encoder value into a long variable **new_fin**, and then gets the remainder of the division of **new_fin** by the **count_per_revolution** global variable.
+
+```
+  long new_fin = fish_enc.read();
+  long x = abs(new_fin%count_per_revolution);
+```
+
+Hold up, why are we using a long variable instead of an int?
+<br><br> **Answer:** The encoder we are using has 500 counts per turn, with 4 readings per count, and even the smallest gearbox we use has a ratio of 15:1. This means we can have at least 500 x 4 x 15 = 30,000, which is approaching very close to the limits of an int variable, which can only store up to 32,768. So in order to use higher gear ratio gearboxes, we definitely need a larger variable to store this data.
+
+<br>Next, we check the value of x. If it is zero, that means it is at the start of the clock cycle (i.e., at the 12 o'clock position). The value is thus returned appropriately, by simple ratio.
+
+```
+  if (x == 0)
+  {
+    return new_fin*1.0/count_per_revolution*360;
+  }
+```
+<br> Otherwise, if that condition is not met, we can just return the default angle.
