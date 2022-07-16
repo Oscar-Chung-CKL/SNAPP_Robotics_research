@@ -1,11 +1,9 @@
 # SNAPP The Robotic Fish
 
 ## <br>Overview
----
 This is a development code that drives SNAPP, our Robotic Fish!
 
 ## <br>Code Breakdown
----
 As the title says, this section will break down every part of the code down the smallest detail.
 
 ### <br>**The Variables**
@@ -72,8 +70,8 @@ getData{
 
 <br> And that wraps up the getData() function!
 
-
 ### <br><br> **The encoder_position() Function**
+---
 
 <br>As the title suggests, this function returns a floating point value corresponding to the encoder position from 0-360 degrees, **very precisely**.
 
