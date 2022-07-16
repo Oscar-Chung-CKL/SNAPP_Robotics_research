@@ -43,7 +43,7 @@ int yawVal = -1;
 
 float s1, s2; // s1: degree of servo 1      s2: degree of servo 2
 bool check;
-int inComingbyte[6] = {0};
+int inComingbyte[4] = {0};
 
 int power = 0;          //Stores power value from controller
 
