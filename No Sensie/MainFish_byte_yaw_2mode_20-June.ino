@@ -161,12 +161,6 @@ int pid_controller(float angle, float desired_angle, int k_p){
   if (x < 1200) x = 1200;
 }
 
-long myAbs(long x){
-  if (x > 0) return x;
-  else if (x < 0) return -x;
-  return 0;
-}
-
 int yaw_turn(int pwm, float diff, int turn){
   //turn is a value from 1-9, Convert turn from 0-9 to -4 to 4.
   turn = map(turn, 1, 9, -4 , 4);
