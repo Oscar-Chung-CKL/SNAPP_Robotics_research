@@ -68,8 +68,6 @@ getData{
 }  // end of getData()
 ```
 
-<br> And that wraps up the getData() function!
-
 ### <br><br> **The encoder_position() Function**
 ---
 
@@ -95,4 +93,8 @@ Hold up, why are we using a long variable instead of an int?
     return new_fin*1.0/count_per_revolution*360;
   }
 ```
-<br> Otherwise, if that condition is not met, we can just return the default angle.
+<br> Otherwise, if that condition is not met, we can just return the default angle by short circuit evaluation.
+
+```c
+return x*1.0/count_per_revolution*360;
+```

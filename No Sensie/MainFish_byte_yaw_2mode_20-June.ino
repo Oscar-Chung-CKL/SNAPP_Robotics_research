@@ -138,19 +138,18 @@ void getData()     // data update from controller
 
 //////////////////////////////////////////////////////////// Yaw turn functions ///////////////////////////////////////////////////
 
-float encoder_position(){
-
+float encoder_position()
+{
   // takes the current count and updates it to an angle from 0 degrees - 360 degress
   long new_fin = fish_enc.read();
   long x = abs(new_fin%count_per_revolution);
   
-  if (x == 0){
+  if (x == 0)
+  {
     return new_fin*1.0/count_per_revolution*360;
   }
+  return x*1.0/count_per_revolution*360;
 
-  else{
-    return x*1.0/count_per_revolution*360;
-  }
 }
 
 
