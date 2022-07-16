@@ -153,7 +153,8 @@ float encoder_position()
 }
 
 
-int pid_controller(float angle, float desired_angle, int k_p){
+int pid_controller(float angle, float desired_angle, int k_p)
+{
   //takes the angle and calculates the corrected signal. Returns the value in microseconds. 
   float error = desired_angle-angle;
   float x = (k_p*error)/3+1500;
