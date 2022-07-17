@@ -118,7 +118,7 @@ void getData()     // data update from controller
       fish_enc.write(0);   // Reset the encoder to 0
     }
     
-    elif(x == 'c')    // Elif, just in case some wild signal pops in
+    else if(x == 'c')    // Elif, just in case some wild signal pops in
     {
       for (int i = 0; i < 6; i++)
       {
