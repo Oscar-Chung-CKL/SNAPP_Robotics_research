@@ -145,9 +145,12 @@ int yaw_turn(int pwm, float diff, int turn)
 
   if(turn == 0)
   {
+    #if debug
     Serial.print("Normal PWM: ");
     Serial.println(pwm);
     Serial.flush();
+    #endif
+
     return (pwm);
   }
   
@@ -157,9 +160,12 @@ int yaw_turn(int pwm, float diff, int turn)
     if (x > 255) x = 255;
     if (x < 30 and speedVal != 0) x = 30;
     if (speedVal == 0) x = 0;
-
+    
+    #if debug
     Serial.print(" First half PWM: ");
     Serial.println(x);
+    #endif
+
     return round(x);
   }
   if ( ( enc_pos > 270.0 && enc_pos < 361.0) || (enc_pos >= 0.0 && enc_pos < 90.0))
@@ -168,8 +174,12 @@ int yaw_turn(int pwm, float diff, int turn)
     if (x > 255) x = 255;
     if (x < 30 and speedVal != 0) x = 30;
     if (speedVal == 0) x = 0;
+    
+    #if debug
     Serial.print("Second Half PWM: ");
     Serial.println(x);
+    #endif
+
     return round(x);
   }
   
@@ -180,10 +190,13 @@ int yaw_turn(int pwm, float diff, int turn)
 
 void setup() 
 {
-  Serial.println("Arming........");   // just some display message 
   //Initialize //Serial
   Serial.begin(115200,SERIAL_8O1);
   Serial1.begin(19200,SERIAL_8O1);
+
+  #if debug
+  Serial.println("Arming........");   // just some display message 
+  #endif
   //while (!(Serial.available() || Serial1.available()));     
   //Ensure fish does not start until there is a signal from comp or controller
   
@@ -213,7 +226,9 @@ void setup()
   pusherESC.writeMicroseconds(1500);
 
   ///////////////////Yaw turn set up END /////////////////////////////
+  #if debug
   Serial.println("Setup is complete!");
+  #endif
 }
 
 
