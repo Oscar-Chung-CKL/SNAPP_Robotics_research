@@ -11,6 +11,12 @@ As the title says, this section will break down every part of the code down the 
 
 The variables are as follows:
 
+- The debug variable is a flag that allows for verbose logging of the stuff going on in the fish for easier debugging through serial outputs.
+<br>
+```Arduino
+#define debug 0
+```
+
 - ```Servo```s ```servo1``` and ```servo2``` create the structs as required by the ```<Servo.h>``` library, which represent the servos controlling the fins. These are mapped to pins 9 and 11, stored in the ```servoPin1``` and ```servoPin2``` variable. Subsequently, the ```initial, min_angle, max_angle, mid_angle, maxAttacAngle``` for both the fins are there to help with common angles the servo might be in.
 <br> 
 ```Arduino
