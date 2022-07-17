@@ -1,6 +1,6 @@
 # SNAPP The Robotic Fish
 
-## <br>Overview
+## Overview
 This is a development code that drives SNAPP, our Robotic Fish!
 
 ## <br>Code Breakdown
@@ -9,14 +9,105 @@ As the title says, this section will break down every part of the code down the 
 ### <br>**The Variables**
 ---
 
-The variables span from (insert variables here, after cleanup)
+The variables are as follows:
 
-### <br>**The getData() Function**
+- ```Servo```s ```servo1``` and ```servo2``` create the structs as required by the ```<Servo.h>``` library, which represent the servos controlling the fins. These are mapped to pins 9 and 11, stored in the ```servoPin1``` and ```servoPin2``` variable. Subsequently, the ```initial, min_angle, max_angle, mid_angle, maxAttacAngle``` for both the fins are there to help with common angles the servo might be in.
+<br> 
+```Arduino
+Servo servo1;
+Servo servo2;
+int servoPin1 = 9;
+int servoPin2 = 11;
+int min_angle = 0;
+int max_angle = 180;
+int mid_angle = 90;
+int min_range = 0;
+int max_range = 9;
+int mid_range = 4;
+float maxAttacAngle=40;
+```
+- The ```speedVal, pitchVal, rollVal and yawVal``` correspond to the speed, pitch, roll and yaw values respectively.
+<br> 
+```Arduino
+int speedVal = 0;
+int pitchVal = -1;
+int rollVal = -1;
+int yawVal = -1;
+```
+
+- The ```float```s ```s1``` and ```s2``` store the angle of the servos 1 and 2 as discussed previously, and the inComingbyte variable stores the ```speed, pitch, yaw``` and ```roll``` values in that order into an array, while the ```power``` and ```motor_Pwm``` set the power and motor's PWM form the controller.
+<br>
+```Arduino
+float s1, s2; // s1: degree of servo 1      s2: degree of servo 2
+int inComingbyte[4] = {0};
+int power = 0;          //Stores power value from controller
+//Motor PWM
+float motor_Pwm = 0;
+```
+
+- The turnVal and killTimer stores the turn value for the fish and the last time the fish received a signal, to determine if the fish has been swimming for more than 3 seconds without a signal.
+<br>
+```Arduino
+int turnVal = 5;
+long int killTimer;
+```
+- Then we declare some basic variable, like ```PIN_PUSHERESC, THROTTLE_MIN, THROTTLE_MAX, THROTTLE_BAKE, ENCA, ENCB, pos_Main, ticRatioMainMotor, encoder_resolution, gearbox``` and ```cpt```, which represent the pin the main motor signal pin is connected to, the minimum throttle, maximum throttle, brake throttle, encoder A pin, encoder B pin, main position for the encoder, the tick ratio of the motor (explained later in the ```encoderPosition()``` function), the encoder resolution, ~~witch hunt Tim and do it again~~.
+```Arduino
+//Motor control through ESC Driver
+#define PIN_PUSHERESC       5     // PIN to control ESC, normally the white wire from ESC 
+Servo   pusherESC; 
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+ * The following are the setting for the ESC used, for other ESC, just chnage setting according to
+ * ESC Spec
+ *///////////////////////////////////////////////////////////////////////////////////////////////////////
+#define THROTTLE_MIN        1500
+#define THROTTLE_MAX        2000
+#define THROTTLE_BAKE       1000
+// End of ESC setting ///////////////////////////////////////////////////////////////////////////////////
+
+
+//Relative Encoder Main Motor
+
+#define ENCA 21 // YELLOW
+#define ENCB 4 // WHITE
+volatile long int pos_Main = 0;
+const long int ticRatioMainMotor=6255; //Number of tic per revolution of the main motor. 
+                                       //Implemnted to use the relative encoder as an absolute encoder temporarily. 
+
+
+//////////////////////////////////////////// Yaw turn variables /////////////////////////////////////////////////////////
+
+const int encoder_resolution = 4;
+const int gearbox = 12;
+const int cpt = 500;
+```
+
+Next, we create the structs for the Encoders A and B.
+
+```Arduino
+Encoder fish_enc(ENCA, ENCB);
+```
+
+And finally, ```counts_per_revolution, q1 ... q4``` and ```enc_pos``` determine the counts per revolution of the encoder, common angles for the rotations and for storing the encoder position.
+
+```Arduino
+long count_per_revolution; // this variable keeps tarck of how much is one revolution
+
+//For the yaw turning 
+float q1 = 90; //0.25 of count
+float q2 = 145; //0.4
+float q3 = 270;//0.75
+float q4 = 325; // 0.9
+float enc_pos = 0;
+```
+And that wraps up the variables we need!
+
+### <br> **The getData() Function**
 ---
 Processes the data received from the RC transceiver. In the case of this fish, we use the Arduino's ***Serial 1*** TX/RX pair, and receive the data as a sequence of ***six characters***, stored in the variable called ***char[6]***. The ***first*** of these characters, ***char[0]*** is either an "h", which refers to "home", or in layman terms, ___reset or "home" the encoder to the zero position___, OR, ***char[0]*** can represent "c", which indicates a normal transmision. The ***next four*** of these characters is then retrieved via a for loop, which is stored in the ***incomingByte[6]*** global variable. The first of these numbers represents the speed value, stored in ***incomingByte[0]***, which is then reassigned to ***speedVal***, the second represents the pitch value, reassiged to **pitchVal**, stored in ***incomingByte[1]***, and so on and so forth for the next yaw value and the roll value for convenience. In addition, a kill timer is also started to later detect if the signal is not being received for more than 3 seconds.
 
 
-<br>**The code is thus implemented as follows:**
+<br>The code is implemented as follows:
 
 First, we check if we are even receiving a signal, and if we are, read the first character.
 
@@ -185,3 +276,54 @@ Next, we set the servos to the horizontal position relative to the water, and se
 servo1.write(90); // Set Servo to defaults
 servo2.write(90);
 ```
+
+### **The loop() function**
+---
+The easiest yet the most important part of the whole system. Can't drive no fish without loopin'.
+
+First, we get the data from the controller, and set the encoder position. We also start off the killswitch() function to detect if the fish has been swimming more than 3 seconds without receiving a signal (and cut off the signal if that is the case).
+```Arduino
+getData();
+killswitch()
+enc_pos = encoderPosition();
+```
+First, we ~~go witch hunting Tim again for details~~ do some math to determine the angle the fins need to be in into variables s1 and s2, which reprsent the angle of s1 and s2 respectively.
+```Arduino
+ s1= (((43-rollVal)*maxAttacAngle/50 +(42-pitchVal)*maxAttacAngle/50) + 90.0)  ;
+s2=  (((43-rollVal)*maxAttacAngle/50 -(42-pitchVal)*maxAttacAngle/50) + 90.0) ;
+
+```
+
+Next, we write the servo 1 and servo 2 angles based on the data received from the controller (roll, turn, pitch, etc.). In layman terms, it changes the angle of the fins.
+```Arduino
+servo1.write(s1);
+servo2.write(s2);
+```
+
+Next, we get the throttle speed by receiving the data from the ```yaw_turn()``` function, map it to the MIN and MAX throttle values, and then pass the information to the ESC.
+```Arduino
+float  turn_differential = 0.2;
+int throttle = yaw_turn( motor_Pwm, turn_differential, turnVal);
+throttle = map(throttle, 0, 255, THROTTLE_MIN, THROTTLE_MAX);
+pusherESC.writeMicroseconds(throttle);
+```
+Finally, we ```flush()``` all the serial pins to avoid any sort of delay.
+
+### <br> **The killswitch() Function:**
+---
+Basically what the title says, it acts as a kill switch that will "kill" the fish's movement if it loses the signal. It checks if the difference between the current time and the previous kill timer is greater than 3000ms, and sets the power, motor_pwm, servo positions and ESC to their stopped position. In layman terms, this resets all the fish's components to the normal position and stops its motion, if it does not receive a signal from the controller for more than 3 seconds.
+```Arduino
+void killswitch()
+{
+  if (millis() - killTimer > 3000) 
+  {
+    power=0;
+    motor_Pwm = 0;
+    pusherESC.write(1500);
+    servo1.write(90);
+    servo2.write(90);
+  }
+}
+```
+
+And that wraps up the entirety of SNAPP's guts!
