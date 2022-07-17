@@ -152,22 +152,24 @@ float encoderPosition()
 
 }
 
-int yaw_turn(int pwm, float diff, int turn){
-  //turn is a value from 1-9, Convert turn from 0-9 to -4 to 4.
-  turn = map(turn, 1, 9, -4 , 4);
-  
+int yaw_turn(int pwm, float diff, int turn)
+{
+  //Map the turn value to +/- 4, which is easier to understand
+  turn -= 5;
   //Accepts a pwm signal and outputs a pwm signal from 0-255
   Serial.print(" This is the encoder position ");
   Serial.println(enc_pos);
 
-  if(turn == 5){
-     Serial.print("Normal PWM: ");
+  if(turn == 0)
+  {
+    Serial.print("Normal PWM: ");
     Serial.println(pwm);
     Serial.flush();
     return (pwm);
   }
   
-  if( (enc_pos > 89.0) && (enc_pos < 271.0)){
+  if( (enc_pos > 89.0) && (enc_pos < 271.0))
+  {
     float x = (1 + turn*diff)*pwm;
     if (x > 255) x = 255;
     if (x < 30 and speedVal != 0) x = 30;
@@ -177,7 +179,8 @@ int yaw_turn(int pwm, float diff, int turn){
     Serial.println(x);
     return round(x);
   }
-  if ( ( enc_pos > 270.0 && enc_pos < 361.0) || (enc_pos >= 0.0 && enc_pos < 90.0)){
+  if ( ( enc_pos > 270.0 && enc_pos < 361.0) || (enc_pos >= 0.0 && enc_pos < 90.0))
+  {
     float x = (1 - turn*diff)*pwm; 
     if (x > 255) x = 255;
     if (x < 30 and speedVal != 0) x = 30;
@@ -192,28 +195,15 @@ int yaw_turn(int pwm, float diff, int turn){
 //////////////////////////////////////////////////////////End of Yaw turn functions ///////////////////////////////////////////////
 
 
-void setup() {
-//   pinMode(13, OUTPUT);
-//   digitalWrite(13, LOW); // Off to indicate still in setup
-
-  // When the fish is connected without shield, there is one more 5V pin require
-  // The code below is to use digital pin to output %v as temp use
-  // Plz remove this line if a shield is used
-
-  digitalWrite(33, HIGH); // <- this is the line to be removed
-  
-//Interrupt pin pullup relative encoder
- // pinMode(ENCA,INPUT_PULLUP);
-//  pinMode(ENCB,INPUT_PULLUP);
-  
+void setup() 
+{
+  Serial.println("Arming........");   // just some display message 
   //Initialize //Serial
   Serial.begin(115200,SERIAL_8O1);
   Serial1.begin(19200,SERIAL_8O1);
   //while (!(Serial.available() || Serial1.available()));     
-    //Ensure fish does not start until there is a signal from comp or controller
+  //Ensure fish does not start until there is a signal from comp or controller
   
-
-
   //Initialize Servo
   pinMode(servoPin1, OUTPUT);
   pinMode(servoPin2, OUTPUT);
@@ -222,40 +212,25 @@ void setup() {
   servo1.write(initial1);
   servo2.write(initial2);
   
-
-  
   //Initialize timer
   killTimer = millis();
-  
-  Serial.println("Encoder Pins Initialized!");
-  Serial.println("Setup is complete! Click to begin the program....");
-  
 
-
-  Serial.println("Arming........");   // just some display message 
-    pusherESC.attach(PIN_PUSHERESC);
-    pusherESC.writeMicroseconds(THROTTLE_MIN);
-
-
-  Serial.println("Arming........After delay");  
-  
-  //Setup complete prompt
-  digitalWrite(13, HIGH); //To Check if setup complete
-  Serial.println("Setup is complete!");
+  // Attach ESC
+  pusherESC.attach(PIN_PUSHERESC);
+  pusherESC.writeMicroseconds(THROTTLE_MIN); 
 
   servo1.write(90); // Set Servo to defaults
   servo2.write(90);
 
   //////////////////// Yaw turn set up////////////////////////////////
 
-  Serial.begin(115200);
   count_per_revolution = cpt*gearbox*encoder_resolution;
 
-  delay(100);
+  // delay(100);  // set this on in case the arduino fks up
   pusherESC.writeMicroseconds(1500);
 
   ///////////////////Yaw turn set up END /////////////////////////////
-
+  Serial.println("Setup is complete!");
 }
 
 

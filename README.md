@@ -20,7 +20,7 @@ Processes the data received from the RC transceiver. In the case of this fish, w
 
 First, we check if we are even receiving a signal, and if we are, read the first character.
 
-```c
+```Arduino
 getData{
   if(Serial1.available()>=6){
     int x = Serial1.read();
@@ -33,7 +33,7 @@ getData{
 
 <br>Next, we check if it's a home command by interpreting the character we just read. If it's "h", then set the encoder position to zero, effectively resetting the system.
 
-```c
+```Arduino
 ... // previous code
 
     if (x == 'h')   // Home command
@@ -46,7 +46,7 @@ getData{
 
 <br>If it is not a home command however, we check if it's a "c" or "normal" command, whose following sequence consists of the speed, pitch, yaw and roll values as discussed previously. The code will also set off the kill timer, as shown.
 
-```c
+```Arduino
     ... // previous code
 
     elif(x == 'c')    // Elif, just in case some wild signal pops in
@@ -96,4 +96,92 @@ Hold up, why are we using a long variable instead of an int?
 
 ```c
 return x*1.0/count_per_revolution*360;
+```
+
+### <br> **The yaw_turn() Function**
+---
+This function drives the "yaw" of the fish by taking into account the encoder position and setting the appropriate PWM signal on the motor. To visualize this, to make the fish "turn", let's say to the left, we need to push the tail to the left very quickly, then slowly turn to the right, and repeat this many times until the desired turn is achieved.
+
+The first thing we do is to convert the ```turn``` value, which has the values from 1 to 9 to -4 to 4. This is to visualize the turn values easier, as we can think of negative values being to the left, and positive ones to the right.
+
+```c
+turn -= 5;
+```
+Next, we check three condtions for the turn value:
+
+- If the turn is 0:
+<br> Just return the pre-existing pwm, as it is at the center of the cycle, and no changes to the pwm are necessary.
+
+```c
+if(turn == 0)
+{
+  return(pwm);
+}
+```
+- If the encoder position is betwen 89 and 271:
+<br> Timothy onii chan pls explain kudasai~ But basically it determines which part of the cycle the motor is in based on the encoder position, then it does some math magic and sets the appropriate pwm. Go witch hunting Timothy for details. tyvm
+```c
+  if( (enc_pos > 89.0) && (enc_pos < 271.0))
+  {
+    float x = (1 + turn*diff)*pwm;
+    if (x > 255) x = 255;
+    if (x < 30 and speedVal != 0) x = 30;
+    if (speedVal == 0) x = 0;
+
+    Serial.print(" First half PWM: ");
+    Serial.println(x);
+    return round(x);
+  }
+  if ( ( enc_pos > 270.0 && enc_pos < 361.0) || (enc_pos >= 0.0 && enc_pos < 90.0))
+  {
+    float x = (1 - turn*diff)*pwm; 
+    if (x > 255) x = 255;
+    if (x < 30 and speedVal != 0) x = 30;
+    if (speedVal == 0) x = 0;
+    Serial.print("Second Half PWM: ");
+    Serial.println(x);
+    return round(x);
+  }
+```
+
+### **The setup() Function**
+---
+You have conquered the mathematical bullshittery going on here. Impressive! Let's move on to the real deal and set this shit up.
+
+Firstly, we set the serial channel 0 and serial channel 1 to 115200 and 19200 baud rate respectively, or in layman terms, set the RX0/TX0 pair on the Arduino spit out and receive data at 115200 bits per second and the RX1/TX1 to 19200 bits per second.
+
+```Arduino
+Serial.begin(115200,SERIAL_8O1);
+  Serial1.begin(19200,SERIAL_8O1);
+```
+
+Then we set the servo pins as output, and attach them as required by the servo library. These will ultimately control the fins on the side of the fish.
+
+```Arduino
+ pinMode(servoPin1, OUTPUT);
+  pinMode(servoPin2, OUTPUT);
+  servo1.attach(servoPin1); // Attach servo pins
+  servo2.attach(servoPin2);
+  servo1.write(initial1);
+  servo2.write(initial2);
+```
+
+Next, we start a kill timer, to determine how long the fish is moving without the signal. This is important so the fish doesn't become sentient and keeps moving when it losees the signal.
+
+```Arduino
+killTimer = millis();
+```
+
+Next, we "attach" the main tail section, which is a geared, brushed DC motor to the system through an ESC. While the hardware is different, it handles information just like the servos, and so we can just use the servo library to drive the tail.
+
+```Arduino
+pusherESC.attach(PIN_PUSHERESC);
+pusherESC.writeMicroseconds(THROTTLE_MIN);
+```
+
+Next, we set the servos to the horizontal position relative to the water, and set the tail ESC to a value of 1500, aka not moving at all.
+
+```Arduino
+servo1.write(90); // Set Servo to defaults
+servo2.write(90);
 ```
