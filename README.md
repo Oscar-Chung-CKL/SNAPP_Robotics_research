@@ -42,7 +42,7 @@ int yawVal = -1;
 ```
 
 - The ```float```s ```s1``` and ```s2``` store the angle of the servos 1 and 2 as discussed previously, and the inComingbyte variable stores the ```speed, pitch, yaw``` and ```roll``` values in that order into an array, while the ```power``` and ```motor_Pwm``` set the power and motor's PWM form the controller.
-<br>
+
 ```Arduino
 float s1, s2; // s1: degree of servo 1      s2: degree of servo 2
 int inComingbyte[4] = {0};
@@ -52,12 +52,13 @@ float motor_Pwm = 0;
 ```
 
 - The turnVal and killTimer stores the turn value for the fish and the last time the fish received a signal, to determine if the fish has been swimming for more than 3 seconds without a signal.
-<br>
+
 ```Arduino
 int turnVal = 5;
 long int killTimer;
 ```
 - Then we declare some basic variable, like ```PIN_PUSHERESC, THROTTLE_MIN, THROTTLE_MAX, THROTTLE_BAKE, ENCA, ENCB, pos_Main, ticRatioMainMotor, encoder_resolution, gearbox``` and ```cpt```, which represent the pin the main motor signal pin is connected to, the minimum throttle, maximum throttle, brake throttle, encoder A pin, encoder B pin, main position for the encoder, the tick ratio of the motor (explained later in the ```encoderPosition()``` function), the encoder resolution, ~~witch hunt Tim and do it again~~.
+
 ```Arduino
 //Motor control through ESC Driver
 #define PIN_PUSHERESC       5     // PIN to control ESC, normally the white wire from ESC 
