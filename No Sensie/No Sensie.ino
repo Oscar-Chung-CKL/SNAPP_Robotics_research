@@ -138,7 +138,7 @@ float encoderPosition()
 int yaw_turn(int pwm, float diff, int turn)
 {
   //Map the turn value to +/- 4, which is easier to understand
-  turn -= 5;
+  turn = map(turn, 1, 9, -4, 4);
   //Accepts a pwm signal and outputs a pwm signal from 0-255
   Serial.print(" This is the encoder position ");
   Serial.println(enc_pos);
