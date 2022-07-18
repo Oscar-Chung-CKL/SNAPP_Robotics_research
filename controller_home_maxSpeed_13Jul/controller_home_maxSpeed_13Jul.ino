@@ -50,11 +50,12 @@ int xMap, yMap;
 int tMap = 5;         //default value of turnVal
 int pMap = 0;         //default value of power
 
-//declare Funduino joystick
+//declare Aunduino joystick
 int sensorValueX = analogRead(A0);    
 int sensorValueY = analogRead(A1);
 
-enum buttons { // The enum representing each control button
+enum buttons { 
+  // The enum representing each control button
    UP, RIGHT, DOWN, LEFT , KEY 
    // up: 0, down: 2, right: 1, left: 3, key : 5
 };
@@ -77,8 +78,7 @@ void checkButton(int idx){
 
   if ( reading != btns[idx].lastState){
     btns[idx].debounce = millis();
-  }
-  
+  } 
   if ( (millis() - btns[idx].debounce) > bounceDelay){
 
     switch(idx){
@@ -208,7 +208,7 @@ void setup() {
 
   
 
-  //Setup Funduino pins
+  //Setup Arduino pins
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
   pinMode(leftbutton,INPUT_PULLUP);
