@@ -242,18 +242,18 @@ void loop() {
   
 
   if (currentLeft == LOW && currentRight == LOW ){ //home the encoder
-      Serial.write("home");
+      Serial.write("h");
       Serial.flush();
      
      //enable only when mega is used
       //timer1 = millis();
-//      Serial1.write("home");
+//      Serial1.write("h");
 //      Serial1.flush();
 //
-//      Serial2.write("home");
+//      Serial2.write("h");
 //      Serial2.flush();
 //
-//      Serial3.write("home");
+//      Serial3.write("h");
 //      Serial3.flush();
 
       
