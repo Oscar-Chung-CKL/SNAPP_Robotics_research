@@ -41,21 +41,21 @@ The variables are as follows:
 - The ```timer1``` variable is to store the last time a command is sent, when it is larger than 30, the command will be sent again. In other words, it let the system to send a command every 30ms. 
 
   Data Type: long int
-  ```Arduino
+  ```c
   long int timer1 = 0;
   ```
 
 - The ```bounceDelay``` variable. This variable means the "break" between the press of each button, such as one press will only change the values by 1, instead of keep increasing, here the value is 90, meaning each button can be pressed every 90ms. 
 
   Data type: long int.
-  ```Arduino
+  ```c
   long int bounceDelay = 90;
   ```
 - The ```msg[6]``` array. This store the command ```c1234e``` in an array. Later in the code, the element will be "written" one by one.
 
   Data type: byte array
 
-  ``` Arduino
+  ```c
   byte msg[6];
   ```
 - The ```sum_str``` and ```message[6]```. They are the command again, but in a String and in a char array, the command will be first stored as a String, then be converted to an char array, eventually to coverted to a byte array (the ```mes[6]``` above).
@@ -71,7 +71,7 @@ The variables are as follows:
 Just one to mark is that the ```keybutton``` is the joystick (YES! You can press the joystick!). 
 
   Data type: int
-  ```Arduino
+  ```c
   //declare Aunduino buttons
   int leftbutton = 5;           
   int rightbutton = 3;
@@ -95,7 +95,7 @@ Just one to mark is that the ```keybutton``` is the joystick (YES! You can press
 
   Data type: int
 
-    ```Arduino
+    ```c
     //Button default values
     int xMap, yMap;
     int tMap = 5;         //default value of turnVal
@@ -110,7 +110,7 @@ Just one to mark is that the ```keybutton``` is the joystick (YES! You can press
   
   Since each button has different pin number, it will be a good idea to store they in the same array, and to have a easier understanding of which button we using, we use ```enum``` to make the button to represent a number, such that we can call the button without actually typing the int number.
 
-  ``` Arduino
+  ```c
   enum buttons { 
   // The enum representing each control button
    UP, RIGHT, DOWN, LEFT , KEY 
@@ -146,7 +146,7 @@ Just one to mark is that the ```keybutton``` is the joystick (YES! You can press
 
   Then, we create an array to store them all, which is ```btn btns[5]```.
 
-  ```Arduino
+  ```c
   typedef struct  { // the struct "btn", to store the info of each button
   
   int idx; //the button type
@@ -179,19 +179,19 @@ But before we go into, let's have a look the first few lines.
 
 First, we ```digitalRead()``` the button to see if it is being pressed or not.
 
-```Arduino
+```c
 int reading = digitalRead(btns[idx].pin);
 ```
 After getting the button state, we check if the press is effective by checking if the last state and the current state is the same, if so, we do nothing. Else we update the press time (The ```debounce```).
 
-```Arduino
+```c
 if ( reading != btns[idx].lastState){
     btns[idx].debounce = millis();
   }
 ```
 Then, we move on to the ```switch...case``` part. First, we make sure the button is pressed at least 90ms after the previoud press, else we do nothing.
 
-``` Arduino
+```c
 if ( (millis() - btns[idx].debounce) > bounceDelay)
 ```
 
@@ -199,7 +199,7 @@ If the button press is effective, we do different action base on the button pin.
 
 First, if it is the ```leftbutton```. If the ````state``` if HIGH, meaning it is being pressed. Then we update the tMap value by subtracting 1 (of course only if tMap is larger than 1), then update other attribute of the button (```debounce``` of left button and right button, becuase you cannot press both together or the time interval between the press of the 2 button cannot be too short.)
 
-```Arduino
+```c
 case LEFT:
 
         if(btns[idx].state == HIGH && tMap > 1){
@@ -213,7 +213,7 @@ case LEFT:
 
 Then, in the case of ```right button```, we do the same thing as ```leftbutton```, but the direction is reversed.
 
-```Arduino
+```c
 case RIGHT:
       
          if(btns[idx].state == HIGH && tMap < 9){
@@ -227,7 +227,7 @@ case RIGHT:
 
 Then, for ```upbutton```, we check the ```state``` of the button. Next, we add the ```pMap``` by 1 (of course if pMap is smaller than 9), then we update the attributes of ```UP``` and ```DOWN``` button too, the concept is same as the ```LEFT``` and ```RIGHT``` button.
 
-```Arduino
+```c
 case UP:
 
         if(btns[idx].state == HIGH && pMap < 9){
@@ -241,7 +241,7 @@ case UP:
 
 Next, for the ```downbutton```. It is same as ```UP``` button, again with reversed direction.
 
-```Arduino
+```c
 case DOWN:
 
         if(btns[idx].state == HIGH && pMap > 0){
@@ -255,7 +255,7 @@ case DOWN:
 
 Lastly, the ````KEY``` button, which is the joystick. When it is pressed (effective press of course). It "reset" the command, such that the power level is 0 again and the turn value is 5, going straight.
 
-```Arduino
+```c
 case KEY:
       
         if(btns[idx].state == HIGH){
@@ -270,14 +270,14 @@ case KEY:
 
 The ```default```. It is.. just default. Do nothing but send a message on the serial monitor. Simply for debugging.
 
-```Arduino
+```c
 default:
         Serial.println("default");
         return;
 ```
 Finally, we update the ```lastState``` of the button.
 
-```Arduino
+```c
 btns[idx].lastState = reading;
 ```
 ### <br> **The ```setup()``` Function**
@@ -287,7 +287,7 @@ With no doubt, we start with setting up to serial channle baud rate.
 
 FYI, we might use UNO or MEGA for the controller, based on the board type, we might need to set up other serial channel as well.
 
-```Arduino
+```c
   Serial.begin(19200,SERIAL_8O1); // Hello, you might need to change it later
   //Serial.begin(19200);
 
@@ -300,7 +300,7 @@ FYI, we might use UNO or MEGA for the controller, based on the board type, we mi
 
 Next, we use a for-loop to set the ```idx``` and ```pin``` in ```btns[]```. One to remark is that the pin number of ```KEY``` is 8, so we have one more line to correct that.
 
-```Arduino
+```c
  for (int i = 0; i < 5; i++){
     btns[i].idx = i;
     btns[i].pin = i + 2; 
@@ -311,7 +311,7 @@ Next, we use a for-loop to set the ```idx``` and ```pin``` in ```btns[]```. One 
 
 Then, we set up the screen of the controller.
 
-```Arduino
+```c
   // Setup Screen
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { //Ive changed the address //already chill
@@ -347,7 +347,7 @@ Then, we set up the screen of the controller.
 
 Finally, we set the mode of each button pin, they are ``` INPUT_PULLUP``` for button digital pins, and ```INPUT``` for analog pins.
 
-```Arduino
+```c
  //Setup Arduino pins
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
@@ -367,7 +367,7 @@ Now let's go to the loop.
 
 First, we get the value of ```sensorValueX``` and ```sensorValueY```, then map them to ```xMap``` and ```yMap``` respectively. FYI, ```analogRead()``` return value between 0 and 1023, but the mapping range is smaller than that, becuase the ```analogRead()``` would be too sensitive.
 
-```Arduino
+```c
 //Reading Joystick Value
   sensorValueX = analogRead(A0);
   sensorValueY = analogRead(A1);
@@ -386,7 +386,7 @@ First, we get the value of ```sensorValueX``` and ```sensorValueY```, then map t
 
 Then we read the ```state``` of each button.
 
-```Arduino
+```c
 int currentLeft = digitalRead(leftbutton);
   int currentRight = digitalRead(rightbutton);
   int currentUp = digitalRead(upbutton);
@@ -401,7 +401,7 @@ So we can "home" the encoder by pressing the ```leftbutton``` and the ```rightbu
 
 If they are pressed at the same time, we ```Serial.write()``` the ```"h"``` to the fish. Also, display the ```HOME NOW``` message on the screen, and return.
 
-```Arduino
+```c
 if (currentLeft == LOW && currentRight == LOW ){ //home the encoder
       Serial.write("h");
       Serial.flush();
@@ -432,7 +432,7 @@ if (currentLeft == LOW && currentRight == LOW ){ //home the encoder
 ```
 Then, we move on to ```checkButton``` of ```LEFT``` and ```RIGHT```.
 
-```Arduino
+```c
   checkButton(LEFT);
   checkButton(RIGHT);
 ```
@@ -440,7 +440,7 @@ Then, we move on to ```checkButton``` of ```LEFT``` and ```RIGHT```.
 <br>
 After that, we have another function, which allows the fish to go full speed regardless of the actual ```pMap``` value. It is the ```max.speed``` mode. It will be triggered by pressing the ```UP``` and ```DOWN``` button at the same time. And display the ```MAX SPEED``` message on the screen.
 
-```Arduino
+```c
   if (currentUp == LOW && currentDown == LOW ){ //go full speed
 
       if (millis() - timer1 > 50) {
@@ -504,25 +504,25 @@ You might be a bit confused. What is the code doing ? What is happening to the `
 
 First, we gather the ```Map```s together, and form a string ```sum_str```.
 
-```Arduino
+```c
 sum_str = "c" + String(9) + String( (char)yMap) + String(newT) + String( (char) xMap) + "e"; 
 ```
 
 Then, we convert the string to the char array ```message[6]```.
 
-```Arduino
+```c
 strcpy(message,sum_str.c_str());
 ```
 
 After that, we convert the char array to byte array ```msg[6]```.
 
-```Arduino
+```c
 String(message).getBytes(msg,7);
 ```
 
 Finally, we ```Serial.write``` the byte array ```msg[6]``` element by element using a for-loop.
 
-```Arduino
+```c
 for (int i = 0; i < 6; i++){ 
         Serial.write(msg[i]);
         Serial.flush();
@@ -546,8 +546,8 @@ _Alright, explanation over, let's go back to the code._
 
 After the ```max.speed``` mode, we check the remaining button and update the screen
 
-```Arduino
-checkButton(UP);
+```c
+  checkButton(UP);
   checkButton(DOWN);
   checkButton(KEY);
 
@@ -586,7 +586,7 @@ Next, we ```Serial.write()``` the command, IF AND ONLY IF timer1 is larger than 
 
 Moreover, in case things go wrong, we will do a final check of ```xMap``` and ```yMap``` to make sure they are within the proper range (10 - 90).
 
-```Arduino
+```c
       if (yMap < 10){
         yMap = 10;
       }
@@ -603,7 +603,7 @@ Moreover, in case things go wrong, we will do a final check of ```xMap``` and ``
 
 The send command code:
 
-```Arduino
+```c
 if (millis() - timer1 > 50) {
       timer1 = millis(); //update timer1
   
@@ -650,7 +650,7 @@ if (millis() - timer1 > 50) {
 
 Finally, we ```display``` the information on the screen.
 
-```Arduino
+```c
 display.display();
 ```
 
@@ -665,14 +665,14 @@ So, to get sensor value, we receive the message for the Serial channel using ```
 
 First, we store the current value of ```waterLevel``` and ```tempature``` in ```last_water``` and ```last_temp``` respectively.
 
-```Arduino
+```c
 int last_water = waterLevel;
 int last_temp = tempature;
 ```
 
 Next, we read the data and store them to the 2 variables.
 
-```Arduino
+```c
 for (int i = 0; i < 1; i ++){
   waterLevel = Serial.read();
   tempature = Serial.read();
@@ -681,7 +681,7 @@ for (int i = 0; i < 1; i ++){
 
 Lastly, we check if the received data is in a proper range (like it is not negative). If so, we do nothing, else we will use the previous value, which is stored in ```last_water``` and ```last_temp```.
 
-```Arduino
+```c
 if (waterLevel < 0)
 {
   waterLevel = last_water;
