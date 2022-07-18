@@ -62,7 +62,7 @@ The variables are as follows:
 
   Data type: String (sum_str) and char array (message[6])
 
-  ```Arduino
+  ```c
   String sum_str;
   char message[6];
   ```
