@@ -277,7 +277,5 @@ void killswitch()
     speedVal=0;
     motor_Pwm = 0;
     pusherESC.write(1500);
-    servo1.write(90);
-    servo2.write(90);
   }
 }
