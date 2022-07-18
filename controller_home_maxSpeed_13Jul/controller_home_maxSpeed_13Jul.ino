@@ -34,7 +34,7 @@ String sum_str;
 char message[6];
 
 
-//declare Funduino buttons
+//declare Aunduino buttons
 int leftbutton = 5;           
 int rightbutton = 3;
 int upbutton = 2;

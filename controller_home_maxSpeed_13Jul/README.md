@@ -1,7 +1,34 @@
 # SNAPP The Robotic Fish
 
 ## Overview
-This is a development code that drives SNAPP, our Robotic Fish!
+Now this is the controller code. This is to tell you what is going on in the controller code.
+
+## <br> What is the command ?
+First, the controller will send the command to the fish. The format of the command is below:
+```Arduino
+c1234e
+```
+Now let me talk about what each element means...
+
+```c``` : The start of the command
+
+```1``` : The power level, ranges from 0 - 9 (int)
+
+```2``` : The pitch value, ranges from 10 - 90 (ascii value), will be displayed as a ```char``` in the code
+
+```3``` : The yaw value, ranges from 1 - 9, 1 - 4 means turn left, 5 means go straight, 6 - 9 means turn right
+
+```4``` : The roll value, ranges from 10 - 90 (ascii value), will be displayed as a ```char``` in the code
+
+```e``` : The end of the command
+
+### <br> Some Special Command
+In the code, you will see a part of ```Serial.write("home")```. This is the so-called "home" command, what it does is that, it will send the command to the fish, such that the fish will reset the encoder position back to 0. The command is:
+
+```
+home
+```
+
 
 ## <br>Code Breakdown
 As the title says, this section will break down every part of the code down the smallest detail.
@@ -11,14 +38,55 @@ As the title says, this section will break down every part of the code down the 
 
 The variables are as follows:
 
-- The debug variable is a flag that allows for verbose logging of the stuff going on in the fish for easier debugging through serial outputs.
+- The ```timer1``` variable is to store the last time a command is sent, when it is larger than 30, the command will be sent again. In other words, it let the system to send a command every 30ms. 
 
-```Arduino
-#define debug 0
-```
+  Data Type: long int
+  ```Arduino
+  long int timer1 = 0;
+  ```
 
-- ```Servo```s ```servo1``` and ```servo2``` create the structs as required by the ```<Servo.h>``` library, which represent the servos controlling the fins. These are mapped to pins 9 and 11, stored in the ```servoPin1``` and ```servoPin2``` variable. Subsequently, the ```initial, min_angle, max_angle, mid_angle, maxAttacAngle``` for both the fins are there to help with common angles the servo might be in.
+- The ```bounceDelay``` variable. This variable means the "break" between the press of each button, such as one press will only change the values by 1, instead of keep increasing, here the value is 90, meaning each button can be pressed every 90ms. 
+
+  Data type: long int.
+  ```Arduino
+  long int bounceDelay = 90;
+  ```
+- The ```msg[6]``` array. This store the command ```c1234e``` in an array. Later in the code, the element will be "written" one by one.
+
+  Data type: byte array
+
+  ``` Arduino
+  byte msg[6];
+  ```
+- The ```sum_str``` and ```message[6]```. They are the command again, but in a String and in a char array, the command will be first stored as a String, then be converted to an char array, eventually to coverted to a byte array (the ```mes[6]``` above).
+
+Data type: String (sum_str) and char array (message[6])
+
+  ```Arduino
+  String sum_str;
+  char message[6];
+  ```
+
+- The ```button```s. These are the pin numbers of each button on the control pad, I don't think I need to explain which button they are, right ?
+Just one to mark is that the ```keybutton``` is the joystick (YES! You can press the joystick!). 
+
+  Data type: int
+  ```Arduino
+  //declare Aunduino buttons
+  int leftbutton = 5;           
+  int rightbutton = 3;
+  int upbutton = 2;
+  int downbutton = 4;
+  int keybutton = 8;
+  ```
+- ```waterLevel``` and  ```tempature```. Yea... I made a spelling mistake, but you know, they refer to water level and the temperature respectively.
+
+# **To be done...**
+The below is not about controller, ignore it, I will finish the rest soon.
+
+---
 <br> 
+
 ```c
 Servo servo1;
 Servo servo2;
@@ -42,6 +110,8 @@ int yawVal = -1;
 ```
 
 - The ```float```s ```s1``` and ```s2``` store the angle of the servos 1 and 2 as discussed previously, and the inComingbyte variable stores the ```speed, pitch, yaw``` and ```roll``` values in that order into an array, while the ```power``` and ```motor_Pwm``` set the power and motor's PWM form the controller.
+
+
 
 ```c
 float s1, s2; // s1: degree of servo 1      s2: degree of servo 2
