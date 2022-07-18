@@ -103,7 +103,7 @@ void getData()
     
     else if(x == 'c')    // Elif, just in case some wild signal pops in
     {
-      for (int i = 0; i < 6; i++)
+      for (int i = 0; i < 4; i++)
       {
         inComingbyte[i] = Serial1.read();
       }
