@@ -12,7 +12,7 @@ As the title says, this section will break down every part of the code down the 
 The variables are as follows:
 
 - The debug variable is a flag that allows for verbose logging of the stuff going on in the fish for easier debugging through serial outputs.
-<br>
+
 ```Arduino
 #define debug 0
 ```
