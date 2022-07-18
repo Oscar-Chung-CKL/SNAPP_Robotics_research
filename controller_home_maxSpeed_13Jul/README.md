@@ -110,7 +110,7 @@ Just one to mark is that the ```keybutton``` is the joystick (YES! You can press
   
   Since each button has different pin number, it will be a good idea to store they in the same array, and to have a easier understanding of which button we using, we use ```enum``` to make the button to represent a number, such that we can call the button without actually typing the int number.
 
-  ```Arduino
+  ``` Arduino
   enum buttons { 
   // The enum representing each control button
    UP, RIGHT, DOWN, LEFT , KEY 
