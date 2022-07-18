@@ -1,7 +1,7 @@
 # SNAPP The Robotic Fish
 
 ## Overview
-Now this is the controller code. This is tell you what is going on in the controller code.
+Now this is the controller code. This is to tell you what is going on in the controller code.
 
 ## <br> What is the command ?
 First, the controller will send the command to the fish. The format of the command is below:
