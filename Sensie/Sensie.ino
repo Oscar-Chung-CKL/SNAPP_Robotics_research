@@ -1,6 +1,7 @@
 //Libraries
 #include <Servo.h>
 #include <Encoder.h>
+#include <Sensie.h>
 
 /*
  * Fixing up Saad's code. There are many things I would like to change, as I like my previous code more, but that will just be a lot of work. I need it to get it functional. 
