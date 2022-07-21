@@ -92,9 +92,9 @@ void getData()
 // updates the speed, pitch, roll and yaw command 
 // cmd signal would be : c speed(1) pitch(1) roll(1) yaw (1) e 
 // the buffer would be of length 6.
-  if(Serial1.available()>=6)
+  if(Serial2.available()>=6)
   {
-    int x = Serial1.read();
+    int x = Serial2.read();
 
     if (x == 'h')   // Home command
     {
@@ -105,7 +105,7 @@ void getData()
     {
       for (int i = 0; i < 4; i++)
       {
-        inComingbyte[i] = Serial1.read();
+        inComingbyte[i] = Serial2.read();
       }
         
       //Cycle through the entire buffer and rocesses the information  
@@ -192,12 +192,12 @@ void setup()
 {
   //Initialize //Serial
   Serial.begin(115200,SERIAL_8O1);
-  Serial1.begin(19200,SERIAL_8O1);
+  Serial2.begin(19200,SERIAL_8O1);
 
   #if debug
   Serial.println("Arming........");   // just some display message 
   #endif
-  //while (!(Serial.available() || Serial1.available()));     
+  //while (!(Serial.available() || Serial2.available()));     
   //Ensure fish does not start until there is a signal from comp or controller
   
   //Initialize Servo
@@ -265,7 +265,7 @@ void loop()
   //Serial.println((String)"power: " + power + "turning: " + turnVal);
   
   Serial.flush();
-  Serial1.flush();
+  Serial2.flush();
 }
 
 
