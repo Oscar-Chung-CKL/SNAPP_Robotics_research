@@ -150,9 +150,9 @@ void getData(){                  //data update from controller
 //cmd signal would be : c speed(1) pitch(1) roll(1) yaw (1) e 
 // the buffer would be of length 6.
     //Serial.println("getting");
-    if(Serial1.available()>=6)
+    if(Serial2.available()>=6)
     {
-      int x = Serial1.read();
+      int x = Serial2.read();
       if (x == 'h')
       {
         ///////////////////////////////////// home set here//////////////////////////////////////
@@ -167,7 +167,7 @@ void getData(){                  //data update from controller
       {
         for (int i = 0; i < 6; i++)
         {
-          inComingbyte[i] = Serial1.read();
+          inComingbyte[i] = Serial2.read();
         }
         speedVal  = inComingbyte[0] -'0';
         pitchVal    = inComingbyte[1] ;
@@ -265,8 +265,8 @@ void setup() {
   
   //Initialize //Serial
   Serial.begin(115200,SERIAL_8O1);
-  Serial1.begin(19200,SERIAL_8O1);
-  while (!(Serial.available() || Serial1.available()));     //Ensure fish does not start until there is a signal from comp or controller
+  Serial2.begin(19200,SERIAL_8O1);
+  while (!(Serial.available() || Serial2.available()));     //Ensure fish does not start until there is a signal from comp or controller
   
 
 
@@ -394,7 +394,7 @@ void loop() {
   //Serial.println((String)"power: " + power + "turning: " + turnVal);
   
   Serial.flush();
-  Serial1.flush();
+  Serial2.flush();
 }
 
 void rel_Encoder(){
