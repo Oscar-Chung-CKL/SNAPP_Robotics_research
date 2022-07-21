@@ -1,13 +1,15 @@
 //Libraries
 #include "Fins.h"
-#include "Sensie.h"
+// #include "Sensie.h"
 #include "Motor.h"
+#include "Power.h"
 
 #define debug 0
 
 Fins fins;
 Motor motor;
-Sensie sensie;
+Power power;
+// Sensie sensie;
 
 
 // Basic control values
@@ -68,6 +70,7 @@ void loop()
   getData();
   // CAUTION: Fish will turn on after kill switch activated once if signal is restored and checksum is passed
   killswitch();
+  float current = power.getCurrent();
 
   enc_pos = motor.encoderPosition();
   turnVal = yawVal;
@@ -130,6 +133,6 @@ void getData()
     }
   }
 
-  int temp = sensie.temperature();
-  int waterLevel = sensie.waterLevel();
+//  int temp = sensie.temperature();
+//  int waterLevel = sensie.waterLevel();
 }

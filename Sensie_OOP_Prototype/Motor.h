@@ -46,8 +46,6 @@ class Motor
         //Map the turn value to +/- 4, which is easier to understand
         turn -= 5;
         //Accepts a pwm signal and outputs a pwm signal from 0-255
-        Serial.print(" This is the encoder position ");
-        Serial.println(enc_pos);
 
         if(turn == 0)
         {

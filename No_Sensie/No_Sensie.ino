@@ -1,11 +1,11 @@
 //Libraries
 #include <Servo.h>
 #include <Encoder.h>
-#include "Sensie.h"
+//#include "Sensie.h"
 
 #define debug 0
 
-Sensie sensie;
+//Sensie sensie;
 
 // Servo
 Servo servo1;
@@ -120,8 +120,8 @@ void getData()
       killTimer = millis();  
     }
   }
-  int temp = sensie.temperature();
-  int waterLevel = sensie.waterLevel();
+//  int temp = sensie.temperature();
+//  int waterLevel = sensie.waterLevel();
 }
 
 //////////////////////////////////////////////////////////// Yaw turn functions ///////////////////////////////////////////////////
