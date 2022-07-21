@@ -74,17 +74,8 @@ void loop()
 
   //Send PWM signal to motor
   motor_Pwm = (speedVal*255)/9;
+  
   //Servo control expression. Linear combination of X and Y component of JoyStick // This part need to ask Tim
-     
-  s1 = (((43-rollVal)*maxAttacAngle/50 +(42-pitchVal)*maxAttacAngle/50) + 90.0);
-  s2 = (((43-rollVal)*maxAttacAngle/50 -(42-pitchVal)*maxAttacAngle/50) + 90.0);
-
-  //Serial.println((String) s1 + " " + s2 + " " + val1 + " " + val2);     
-  //Servo motor angle is set
-
-  servo1.write(s1);
-  servo2.write(s2);
-
   fins.finControl(rollVal, pitchVal);
 
   int throttle = motor.yaw_turn( motor_Pwm, turnVal, speedVal);
@@ -104,6 +95,7 @@ void killswitch()
     pusherESC.write(1500);
   }
 }
+
 
 
 // data update from controller
