@@ -78,7 +78,7 @@ void loop()
   //Servo control expression. Linear combination of X and Y component of JoyStick // This part need to ask Tim
   fins.finControl(rollVal, pitchVal);
 
-  int throttle = motor.yaw_turn( motor_Pwm, turnVal, speedVal);
+  int throttle = motor.yaw_turn(motor_Pwm, turnVal, speedVal);
   motor.driveMotor(throttle);
    
   Serial.flush();
