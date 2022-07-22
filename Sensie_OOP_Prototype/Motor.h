@@ -7,7 +7,6 @@
 
 #define THROTTLE_MIN        1500
 #define THROTTLE_MAX        2000
-#define THROTTLE_BAKE       1000
 
 Servo pusherESC;
 
