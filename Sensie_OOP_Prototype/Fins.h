@@ -7,7 +7,7 @@ int servoPin1 = 9;
 int servoPin2 = 11;
 
 float s1, s2;
-float maxAttacAngle = 80;
+float maxAttacAngle = 90;
 
 class Fins
 {
