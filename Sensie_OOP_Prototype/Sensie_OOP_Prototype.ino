@@ -20,13 +20,9 @@ int yawVal = -1;
 
 int inComingbyte[4] = {0};
 float motor_Pwm = 0;        // Motor PWM
-
-// Turn Differential
 int turnVal = 5;            // Stores commmand value for control left and right. values 1-4 are left, 5 is straight, 6-9 are right
-
-
-// Kill Switch
 long int killTimer;       // timer for kill switch
+
 // Possible scenario
 // Fish runs for so long, that the timer resets to 0. Then the difference between the previous and the current will be >0, and kill the fish
 // Might cause serious problems in the future when we run the fish across the harbor for instance
