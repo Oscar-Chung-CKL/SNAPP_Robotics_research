@@ -33,9 +33,8 @@ class Motor
     {
           // takes the current count and updates it to an angle from 0 degrees - 360 degress
         long new_fin = fish_enc.read();
-        long x = abs(new_fin%count_per_revolution);
-        //TODO
-        // Include a minus
+        long x = abs((new_fin - floor(new_fin/count_per_revolution))*count_per_revolution);
+
         if (x == 0)
         {
             return new_fin*1.0/count_per_revolution*360;
