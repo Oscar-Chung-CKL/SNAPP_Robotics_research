@@ -29,7 +29,9 @@ class Fins
         s2 = (((43-rollVal)*maxAttacAngle/50 -(42-pitchVal)*maxAttacAngle/50) + 90.0);
         servo1.write(s1);
         servo2.write(s2);
+        #if debug
         Serial.println((String) "S1:" + s1);
         Serial.println((String) "S2:" + s2);
+        #endif
     }
 };
