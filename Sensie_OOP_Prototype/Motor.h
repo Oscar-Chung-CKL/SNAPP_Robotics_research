@@ -21,6 +21,8 @@ float enc_pos = 0;
 float diff = 0.2;
 long int count_per_revolution;
 
+const double pi = 3.14159265359; // it is pi... of course
+
 Encoder fish_enc(ENCA, ENCB);
 
 class Motor
@@ -39,6 +41,11 @@ class Motor
             return new_fin*1.0/count_per_revolution*360;
         }
         return x*1.0/count_per_revolution*360;
+    }
+    
+    //covert degree to redian.
+    float toRadian(float degree){
+      return (degree / 360 * 2 * pi);
     }
 
     int yaw_turn(int pwm, int turn, int speedVal)
@@ -60,7 +67,7 @@ class Motor
   
         if( (enc_pos > 89.0) && (enc_pos < 271.0))
         {
-            float x = (1 + turn*diff)*pwm;
+            float x = ( 1 + (diff*turn*sin( toRadian(enc_pos) )) * pwm);
             if (x > 255) x = 255;
             if (x < 30 and speedVal != 0) x = 30;
             if (speedVal == 0) x = 0;
@@ -75,7 +82,7 @@ class Motor
   
         if ( ( enc_pos > 270.0 && enc_pos < 361.0) || (enc_pos >= 0.0 && enc_pos < 90.0))
         {
-            float x = (1 - turn*diff)*pwm; 
+            float x = ( 1 + (diff*turn*sin( toRadian(enc_pos) )) * pwm);
             if (x > 255) x = 255;
             if (x < 30 and speedVal != 0) x = 30;
             if (speedVal == 0) x = 0;
@@ -88,6 +95,7 @@ class Motor
             return round(x);
         }
     }
+    
 
     void resetMotor()
     {
