@@ -2,13 +2,11 @@
 #include "Fins.h"
 // #include "Sensie.h"
 #include "Motor.h"
-#include "Power.h"
 
 #define debug 0
 
 Fins fins;
 Motor motor;
-Power power;
 // Sensie sensie;
 
 
@@ -66,7 +64,6 @@ void loop()
   getData();
   // CAUTION: Fish will turn on after kill switch activated once if signal is restored and checksum is passed
   killswitch();
-  float current = power.getCurrent();
 
   enc_pos = motor.encoderPosition();
   turnVal = yawVal;
@@ -78,6 +75,7 @@ void loop()
   fins.finControl(rollVal, pitchVal);
 
   int throttle = motor.yaw_turn(motor_Pwm, turnVal, speedVal);
+  Serial.println(throttle);
   motor.driveMotor(throttle);
    
   Serial.flush();

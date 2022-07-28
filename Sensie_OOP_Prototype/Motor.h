@@ -32,18 +32,26 @@ class Motor
     float encoderPosition()
     {
           // takes the current count and updates it to an angle from 0 degrees - 360 degress
-        long new_fin = fish_enc.read();
-        long x = abs((new_fin - floor(new_fin/count_per_revolution))*count_per_revolution);
+        long new_fin = 0;
+        new_fin = fish_enc.read();
+        long x = new_fin - floor(new_fin / count_per_revolution) * count_per_revolution;
+//        Serial.print("Encoder position is: ");
+//        Serial.println(x*1.0/count_per_revolution*360);
+//        
 
         if (x == 0)
         {
+//     Serial.print("And if x is 0, enc pos is: ");
+//        Serial.println(new_fin*1.0/count_per_revolution*360);
             return new_fin*1.0/count_per_revolution*360;
         }
         return x*1.0/count_per_revolution*360;
+        
     }
     
     //covert degree to redian.
-    float toRadian(float degree){
+    float toRadian(float degree)
+    {
       return (degree / 360 * 2 * pi);
     }
 
@@ -73,7 +81,7 @@ class Motor
     
             #if debug
             Serial.print(" First half PWM: ");
-            Serial.println(x);
+            Serial.println(x);T
             #endif
 
             return round(x);
