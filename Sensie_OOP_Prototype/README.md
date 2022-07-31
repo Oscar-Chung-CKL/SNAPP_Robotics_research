@@ -182,3 +182,48 @@ void driveMotor(int throttle)
     pusherESC.writeMicroseconds(throttle);
 }
 ```
+
+## Fins.h
+
+This header file consists of the controls to make controlling the fins easier.
+
+We start off by including the servo library, and creating the relevant constr4ucts and variables to control the fin servos.
+
+```C
+#include <Servo.h>
+
+Servo servo1;
+Servo servo2;
+
+int servoPin1 = 9;
+int servoPin2 = 11;
+
+float s1, s2;
+float maxAttacAngle = 90;
+```
+
+The servo1 represents the left fin, while servo2 respresents the right fin. Subsequently, we declare their data pins on Arduino digital pins 9 and 11, and the float s1 and s2 are used to hold their angle given a certain pitch/roll input. The maxAttacAngle, as the name suggests, stores the maximum attack angle the servo is allowed to deflect in either direction.
+
+### <br> **The initFin() function:**
+---
+Here, we set the previously declared pins as OUTPUT, and attach the servos to the relevant pins for control. Additionally, we write 90 to the servos to reset them ot the correct position.
+
+```C
+    void initFin()
+    {
+        pinMode(servoPin1, OUTPUT);
+        pinMode(servoPin2, OUTPUT);
+        servo1.attach(servoPin1);
+        servo2.attach(servoPin2);
+        servo1.write(90);
+        servo2.write(90);
+    }
+```
+
+### <br> **The finControl() function:**
+---
+This function sets the servo controls with the given input.
+
+Before we explain the code, it is important to understand what is going on under the hood. Let's say you're putting in pitch input - how would you deal with this? Well, pretty simple, just put both fins up or down depending on the deflection on the joystick and the direction you want it to go. Roll is a bit more complicated, but still not that difficult to digest - just deflect them in opposite directions and voila!
+
+But what if you need to pitch AND roll at the same time, and that too, with differential input?

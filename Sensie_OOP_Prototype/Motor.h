@@ -11,7 +11,7 @@
 Servo pusherESC;
 
 const int encoder_resolution = 4;
-const int gearbox = 12;
+const int gearbox = 15;
 const int cpt = 500;
 
 volatile long int pos_Main = 0;
@@ -34,15 +34,15 @@ class Motor
           // takes the current count and updates it to an angle from 0 degrees - 360 degress
         long new_fin = 0;
         new_fin = fish_enc.read();
-        long x = new_fin - floor(new_fin / count_per_revolution) * count_per_revolution;
-//        Serial.print("Encoder position is: ");
-//        Serial.println(x*1.0/count_per_revolution*360);
+        long x = abs(new_fin - floor(new_fin / count_per_revolution) * count_per_revolution);
+        Serial.print("Encoder position is: ");
+        Serial.println(x*1.0/count_per_revolution*360);
 //        
 
         if (x == 0)
         {
-//     Serial.print("And if x is 0, enc pos is: ");
-//        Serial.println(new_fin*1.0/count_per_revolution*360);
+     Serial.print("And if x is 0, enc pos is: ");
+        Serial.println(new_fin*1.0/count_per_revolution*360);
             return new_fin*1.0/count_per_revolution*360;
         }
         return x*1.0/count_per_revolution*360;
@@ -114,7 +114,8 @@ class Motor
         pusherESC.attach(PIN_PUSHERESC);
         pusherESC.writeMicroseconds(THROTTLE_MIN);
 
-        count_per_revolution = cpt*gearbox*encoder_resolution;
+        count_per_revolution = long(cpt)*long(gearbox)*long(encoder_resolution);
+        delay(100);
     }
 
     void driveMotor(int throttle)

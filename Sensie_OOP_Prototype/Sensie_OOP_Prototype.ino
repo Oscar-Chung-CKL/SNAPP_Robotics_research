@@ -53,6 +53,8 @@ void setup()
   //Initialize timer
   killTimer = millis();
 
+  delay(100);
+
   #if debug
   Serial.println("Setup is complete!");
   #endif
@@ -62,6 +64,7 @@ void setup()
 void loop() 
 {
   getData();
+  //Serial.print(Serial2.read());
   // CAUTION: Fish will turn on after kill switch activated once if signal is restored and checksum is passed
   killswitch();
 
@@ -76,6 +79,7 @@ void loop()
 
   int throttle = motor.yaw_turn(motor_Pwm, turnVal, speedVal);
   Serial.println(throttle);
+
   motor.driveMotor(throttle);
    
   Serial.flush();
@@ -104,6 +108,7 @@ void getData()
   if(Serial2.available()>=6)
   {
     int x = Serial2.read();
+    Serial.println((String)"Receiving:" + x);
 
     if (x == 'h')   // Home command
     {
